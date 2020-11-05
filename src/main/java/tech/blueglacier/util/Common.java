@@ -61,12 +61,12 @@ public class Common {
 		return attachmentName;
 	}
 	
-	public static boolean isInline(BodyDescriptor bd) {
+	public static String getContentDispositionType(BodyDescriptor bd) {
+		String contentDispositionType = null;
 		if(bd instanceof MaximalBodyDescriptor){
-			String contentDispositionType = ((MaximalBodyDescriptor)bd).getContentDispositionType();
-			if(contentDispositionType.toLowerCase().contains("inline")) return true;
+			contentDispositionType = ((MaximalBodyDescriptor)bd).getContentDispositionType();
 		}
-		return false;
+		return contentDispositionType;
 	}
 	
 	public static String getAttachmentName(BodyDescriptor bd){		
