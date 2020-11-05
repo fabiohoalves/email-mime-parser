@@ -47,7 +47,7 @@ public class Common {
 		return filename;
 	}
 	
-	public static String getAttachmentNameFromContentTypeParmaeters(BodyDescriptor bd) {
+	public static String getAttachmentNameFromContentTypeParameters(BodyDescriptor bd) {
 		String attachmentName = null;
 		if(bd instanceof MaximalBodyDescriptor){
 			Map<String, String> contentTypeParameters = ((MaximalBodyDescriptor)bd).getContentTypeParameters();
@@ -61,12 +61,20 @@ public class Common {
 		return attachmentName;
 	}
 	
+	public static boolean isInline(BodyDescriptor bd) {
+		if(bd instanceof MaximalBodyDescriptor){
+			String contentDispositionType = ((MaximalBodyDescriptor)bd).getContentDispositionType();
+			if(contentDispositionType.toLowerCase().contains("inline")) return true;
+		}
+		return false;
+	}
+	
 	public static String getAttachmentName(BodyDescriptor bd){		
 		// Content tech.blueglacier.disposition 'filename' is more standard, so it's taken as default first
 		String attachmentName = Common.getAttachmentNameFromDispositionParameters(bd);
 		if(attachmentName == null || attachmentName.isEmpty()){			
 			// Content type 'name' is other alternative so it's taken as alternative too
-			attachmentName = Common.getAttachmentNameFromContentTypeParmaeters(bd);			
+			attachmentName = Common.getAttachmentNameFromContentTypeParameters(bd);			
 		}		
 		return attachmentName;		
 	}
