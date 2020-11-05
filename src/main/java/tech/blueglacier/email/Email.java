@@ -27,6 +27,7 @@ public class Email {
 
 	private Header header;
 	private ArrayList<Attachment> attachments;
+	private ArrayList<Attachment> attachmentsInline;
 	private Attachment plainTextEmailBody;
 	private Attachment htmlEmailBody;
 	private Attachment calendarBody;
@@ -51,6 +52,7 @@ public class Email {
 	public Email(){
 		this.header = new HeaderImpl();
 		this.attachments = new ArrayList<Attachment>();
+		this.attachmentsInline = new ArrayList<Attachment>();
 		this.attachmentReplacedInHtmlBody = false;
 		this.multipartStack = new Stack<MultipartType>();
 		this.emailMessageStack = new Stack<EmailMessageType>();
@@ -140,9 +142,14 @@ public class Email {
 		return null;
 	}
 	
-	private void addAttachments(BodyDescriptor bd, InputStream is) {
-	   attachments.add(new EmailAttachment(bd,is));
-	   LOGGER.info("Email attachment identified");
+	private void addAttachments(BodyDescriptor bd, InputStream is) {     
+		Attachment attachment = new EmailAttachment(bd,is);
+		if (isImage(attachment) && Common.isInline(bd)) {
+		  attachmentsInline.add(attachment);
+		  LOGGER.info("Email attachment Inline identified");
+		}
+		attachments.add(attachment);
+		LOGGER.info("Email attachment identified");
 	}
 
 	private void addAttachments(Attachment attachment) {
@@ -169,7 +176,7 @@ public class Email {
 						throw new RuntimeException(e);
 					}
 					htmlEmailBody.setIs(mainInputStream);
-				}else{
+				}else{				
 					addAttachments(new HtmlEmailBody(bd,is));
 				}
 				isBodySet = true;
@@ -225,6 +232,10 @@ public class Email {
 		return attachments;
 	}
 
+	public List<Attachment> getAttachmentsInline() {		
+		return attachmentsInline;
+	}
+
 	public Attachment getHTMLEmailBody() {		
 		return htmlEmailBody;
 	}
@@ -235,7 +246,7 @@ public class Email {
 
 	public void reArrangeEmail() {
 		decodedEmailSize = setEmailSize();
-		replaceInlineImageAttachmentsInHtmlBody();		
+		replaceInlineImageAttachmentsInHtmlBody();
 		removeUnidentifiedMimePartsForAttachment();
 		emailSize = setEmailSize();
 	}
@@ -259,7 +270,6 @@ public class Email {
 		}
 		return emailSize;		
 	}	
-
 	private void removeUnidentifiedMimePartsForAttachment() {
 		List<Attachment> removeList = new ArrayList<Attachment>();
 		for (Attachment attachment : attachments) {
@@ -269,8 +279,9 @@ public class Email {
 		}
 		removeAttachments(removeList);
 	}
-
 	private void replaceInlineImageAttachmentsInHtmlBody() {
+		
+		
 		if (htmlEmailBody != null) {
 			String strHTMLBody = getHtmlBodyString();
 
@@ -284,16 +295,16 @@ public class Email {
 					strHTMLBody = replaceAttachmentInHtmlBody(strHTMLBody, removalList, attachment, contentId, imageMimeType);
 				}
 			}
-
 			removeAttachments(removalList);
 			resetRecreatedHtmlBody(strHTMLBody);
 			LOGGER.info("Finished embedding images in html");
 		}
 	}
-
+	
+	
 	private String replaceAttachmentInHtmlBody(String strHTMLBody,
 											   List<Attachment> removalList, Attachment attachment,
-											   String contentId, String imageMimeType) {
+											   String contentId, String imageMimeType) {		
 		if (strHTMLBody.contains("cid:" + contentId)) {
 			String base64EncodedAttachment = null;
 			try {
@@ -343,13 +354,11 @@ public class Email {
 			htmlEmailBody.setIs(new ByteArrayInputStream(strHTMLBody.getBytes(getCharSet())));
 		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException(e);
+		}
 	}
-	}
-
 	private void removeAttachments(List<Attachment> removalList) {
 		attachments.removeAll(removalList);
 	}
-
 	private String getAttachmentContentID(Attachment attachment) {
 		String contentId = ((MaximalBodyDescriptor) attachment.getBd()).getContentId();
 		contentId = stripContentID(contentId);
@@ -390,4 +399,6 @@ public class Email {
 	private InputStream concatInputStream(InputStream source, InputStream destination) throws IOException{		
 		return new SequenceInputStream(destination, source);		
 	}
+
+	
 }
