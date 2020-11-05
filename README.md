@@ -1,3 +1,4 @@
+
 # email-mime-parser
 A mime4j based simplified email mime parser for java
 
@@ -55,3 +56,13 @@ For more info check the test case file **'src\test\java\tech\blueglacier\parser\
 
 
 
+
+**I made a fork of #email-mime-parser (https://github.com/ram-sharma-6453/email-mime-parser) to added a list of attachment that is inline.**
+
+added at project task to compact jar
+
+```
+gradle build
+gradle fatJar
+
+```
