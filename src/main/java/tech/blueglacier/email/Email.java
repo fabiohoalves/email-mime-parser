@@ -118,6 +118,18 @@ public class Email {
 		return null;
 	}
 	
+	public List<String> getListReceivedHeaderValue() {
+		List<Field> fields = header.getFields("Received");
+		if(fields != null) {
+			List<String> listReceived = new ArrayList<String>();
+			for(Field field: fields) {
+				listReceived.add(field.getBody());
+			}
+			return listReceived;
+		}
+		return null;
+	}
+	
 	public String getToEmailHeaderValue() {
 		Field to = header.getField("To");
 		if (to != null) {
@@ -126,10 +138,18 @@ public class Email {
 		return null;
 	}
 	
-	public String getCCEmailHeaderValue(){
+	public String getCcEmailHeaderValue(){
 		Field cc = header.getField("Cc");	
 		if (cc != null) {
 			return cc.getBody();
+		}
+		return null;
+	}
+	
+	public String getBccEmailHeaderValue(){
+		Field bcc = header.getField("Bcc");	
+		if (bcc != null) {
+			return bcc.getBody();
 		}
 		return null;
 	}
