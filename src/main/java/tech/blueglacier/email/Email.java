@@ -163,7 +163,7 @@ public class Email {
 	}
 	
 	private boolean isInline(BodyDescriptor bd) {		
-		if(Common.getContentDispositionType(bd).toLowerCase().contains("inline"))
+		if(Common.getContentDispositionType(bd) != null && Common.getContentDispositionType(bd).toLowerCase().contains("inline"))
 			return true;
 		return false;
 	}

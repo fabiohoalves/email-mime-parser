@@ -78,7 +78,7 @@ public class EmailVerificationTest {
     @Test
     public void assertCcEmailHeader() throws MimeException, IOException {
         Email email = getParsedSimpleMail();
-        Assert.assertEquals(email.getCCEmailHeaderValue(), "\"Sharma, Ram\" <ram.sharma.6453@aol.com>, Ram Sharma <ram.sharma.6453.ait@gmail.com>");
+        Assert.assertEquals(email.getCcEmailHeaderValue(), "\"Sharma, Ram\" <ram.sharma.6453@aol.com>, Ram Sharma <ram.sharma.6453.ait@gmail.com>");
     }
 
     @Test
@@ -96,7 +96,7 @@ public class EmailVerificationTest {
     @Test
     public void assertMissingCcHeader() throws MimeException, IOException {
         Email email = getParsedMailWithMissingHeaders();
-        Assert.assertEquals(email.getCCEmailHeaderValue(), null);
+        Assert.assertEquals(email.getCcEmailHeaderValue(), null);
     }
 
     @Test
