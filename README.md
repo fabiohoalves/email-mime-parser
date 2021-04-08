@@ -62,7 +62,7 @@ For more info check the test case file **'src\test\java\tech\blueglacier\parser\
 added at project task to compact jar
 
 ```
-gradle build
+gradle build -x test
 gradle fatJar
 
 ```

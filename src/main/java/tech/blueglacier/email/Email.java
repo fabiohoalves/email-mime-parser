@@ -342,6 +342,7 @@ public class Email {
 			strHTMLBody = strHTMLBody.replace("cid:" + contentId, "data:" + imageMimeType + ";base64," + base64EncodedAttachment);
 			removalList.add(attachment);
 			attachmentReplacedInHtmlBody = true;
+			attachmentsInline.add(attachment);
 		}
 		return strHTMLBody;
 	}
