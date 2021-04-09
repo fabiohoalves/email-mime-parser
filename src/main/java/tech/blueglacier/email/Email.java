@@ -162,19 +162,8 @@ public class Email {
 		return null;
 	}
 	
-	private boolean isInline(BodyDescriptor bd) {		
-		if(Common.getContentDispositionType(bd) != null && Common.getContentDispositionType(bd).toLowerCase().contains("inline"))
-			return true;
-		return false;
-	}
-	
 	private void addAttachments(BodyDescriptor bd, InputStream is) {     
 		Attachment attachment = new EmailAttachment(bd,is);
-		
-		if (isImage(attachment) && isInline(bd)) {
-		  attachmentsInline.add(attachment);
-		  LOGGER.info("Email attachment Inline identified");
-		}
 		attachments.add(attachment);
 		LOGGER.info("Email attachment identified");
 	}
